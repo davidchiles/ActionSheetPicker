@@ -143,6 +143,11 @@
     [self dismissPicker];
 }
 
+-(void)dismissActionPicker
+{
+    [self dismissPicker];
+}
+
 - (IBAction)actionPickerCancel:(id)sender {
     [self notifyTarget:self.target didCancelWithAction:self.cancelAction origin:[self storedOrigin]];
     [self dismissPicker];
@@ -172,6 +177,18 @@
     if (!value)
         value = [NSNumber numberWithInt:0];
     NSDictionary *buttonDetails = [[NSDictionary alloc] initWithObjectsAndKeys:title, @"buttonTitle", value, @"buttonValue", nil];
+    [self.customButtons addObject:buttonDetails];
+}
+
+-(void)addCustomButtonWithTitle:(NSString *)title didSelectBlock:(void (^)(void))block
+{
+    if (!self.customButtons)
+        _customButtons = [[NSMutableArray alloc] init];
+    if (!title)
+        title = @"";
+    if (!block)
+        block = ^void (void){};
+    NSDictionary *buttonDetails = [[NSDictionary alloc] initWithObjectsAndKeys:title, @"buttonTitle", [block copy], @"block", nil];
     [self.customButtons addObject:buttonDetails];
 }
 
@@ -212,7 +229,7 @@
     }
     UIBarButtonItem *flexSpace = [self createButtonWithType:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
     [barItems addObject:flexSpace];
-    if (title){
+    if ([title length]){
         UIBarButtonItem *labelButton = [self createToolbarLabelWithTitle:title];
         [barItems addObject:labelButton];    
         [barItems addObject:flexSpace];
@@ -224,12 +241,14 @@
 }
 
 - (UIBarButtonItem *)createToolbarLabelWithTitle:(NSString *)aTitle {
-    UILabel *toolBarItemlabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, 180,30)];
+    UILabel *toolBarItemlabel = [[UILabel alloc]init];
     [toolBarItemlabel setTextAlignment:UITextAlignmentCenter];    
     [toolBarItemlabel setTextColor:[UIColor whiteColor]];    
     [toolBarItemlabel setFont:[UIFont boldSystemFontOfSize:16]];    
     [toolBarItemlabel setBackgroundColor:[UIColor clearColor]];    
-    toolBarItemlabel.text = aTitle;    
+    toolBarItemlabel.text = aTitle;
+    CGSize size = [aTitle sizeWithAttributes:@{NSFontAttributeName:toolBarItemlabel.font}];
+    toolBarItemlabel.frame = CGRectMake(0, 0, size.width, 30);
     UIBarButtonItem *buttonLabel = [[UIBarButtonItem alloc]initWithCustomView:toolBarItemlabel];
     return buttonLabel;
 }

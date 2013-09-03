@@ -42,6 +42,8 @@
     // Present the ActionSheetPicker
 - (void)showActionSheetPicker;
 
+- (void)dismissActionPicker;
+
     // For subclasses.  This is used to send a message to the target upon a successful selection and dismissal of the picker (i.e. not canceled).
 - (void)notifyTarget:(id)target didSucceedWithAction:(SEL)successAction origin:(id)origin;
 
@@ -53,6 +55,8 @@
 
     // Adds custom buttons to the left of the UIToolbar that select specified values
 - (void)addCustomButtonWithTitle:(NSString *)title value:(id)value;
+
+-(void)addCustomButtonWithTitle:(NSString *)title didSelectBlock:(void (^)(void))block;
 
     //For subclasses. This responds to a custom button being pressed.
 - (IBAction)customButtonPressed:(id)sender;

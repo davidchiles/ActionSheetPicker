@@ -87,13 +87,22 @@
 - (void)customButtonPressed:(id)sender {
     UIBarButtonItem *button = (UIBarButtonItem*)sender;
     NSInteger index = button.tag;
-    NSAssert((index >= 0 && index < self.customButtons.count), @"Bad custom button tag: %d, custom button count: %d", index, self.customButtons.count);    
+    NSAssert((index >= 0 && index < self.customButtons.count), @"Bad custom button tag: %d, custom button count: %d", index, self.customButtons.count);
+    
     NSAssert([self.pickerView respondsToSelector:@selector(setDate:animated:)], @"Bad pickerView for ActionSheetDatePicker, doesn't respond to setDate:animated:");
     NSDictionary *buttonDetails = [self.customButtons objectAtIndex:index];
-    NSDate *itemValue = [buttonDetails objectForKey:@"buttonValue"];
-    UIDatePicker *picker = (UIDatePicker *)self.pickerView;    
-    [picker setDate:itemValue animated:YES];
-    [self eventForDatePicker:picker];
+    if([buttonDetails objectForKey:@"block"]) {
+        void (^block)(void) = [buttonDetails objectForKey:@"block"];
+        dispatch_async(dispatch_get_main_queue(), block);
+        return;
+    }
+    else {
+        NSDate *itemValue = [buttonDetails objectForKey:@"buttonValue"];
+        UIDatePicker *picker = (UIDatePicker *)self.pickerView;
+        [picker setDate:itemValue animated:YES];
+        [self eventForDatePicker:picker];
+    }
+    
 }
 
 @end
