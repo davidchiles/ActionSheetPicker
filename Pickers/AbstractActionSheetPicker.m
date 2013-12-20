@@ -195,7 +195,7 @@
 - (IBAction)customButtonPressed:(id)sender {
     UIBarButtonItem *button = (UIBarButtonItem*)sender;
     NSInteger index = button.tag;
-    NSAssert((index >= 0 && index < self.customButtons.count), @"Bad custom button tag: %d, custom button count: %d", index, self.customButtons.count);
+    NSAssert((index >= 0 && index < self.customButtons.count), @"Bad custom button tag: %ld, custom button count: %lu", index, (unsigned long)self.customButtons.count);
     NSAssert([self.pickerView respondsToSelector:@selector(selectRow:inComponent:animated:)], @"customButtonPressed not overridden, cannot interact with subclassed pickerView");
     NSDictionary *buttonDetails = [self.customButtons objectAtIndex:index];
     NSAssert(buttonDetails != NULL, @"Custom button dictionary is invalid");
@@ -242,7 +242,7 @@
 
 - (UIBarButtonItem *)createToolbarLabelWithTitle:(NSString *)aTitle {
     UILabel *toolBarItemlabel = [[UILabel alloc]init];
-    [toolBarItemlabel setTextAlignment:UITextAlignmentCenter];    
+    [toolBarItemlabel setTextAlignment:NSTextAlignmentCenter];
     [toolBarItemlabel setTextColor:[UIColor whiteColor]];    
     [toolBarItemlabel setFont:[UIFont boldSystemFontOfSize:16]];    
     [toolBarItemlabel setBackgroundColor:[UIColor clearColor]];    
@@ -328,7 +328,7 @@
 - (void)configureAndPresentPopoverForView:(UIView *)aView {
     UIViewController *viewController = [[UIViewController alloc] initWithNibName:nil bundle:nil];
     viewController.view = aView;
-    viewController.contentSizeForViewInPopover = viewController.view.frame.size;
+    viewController.preferredContentSize = viewController.view.frame.size;
     _popOverController = [[UIPopoverController alloc] initWithContentViewController:viewController];
     [self presentPopover:_popOverController];
 }

@@ -94,11 +94,11 @@
     else if (target && [target respondsToSelector:successAction]) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-        [target performSelector:successAction withObject:[NSNumber numberWithInt:self.selectedIndex] withObject:origin];
+        [target performSelector:successAction withObject:[NSNumber numberWithInteger:self.selectedIndex] withObject:origin];
 #pragma clang diagnostic pop
         return;
     }
-    NSLog(@"Invalid target/action ( %s / %s ) combination used for ActionSheetPicker", object_getClassName(target), (char *)successAction);
+    NSLog(@"Invalid target/action ( %s / %s ) combination used for ActionSheetPicker", object_getClassName(target), sel_getName(@selector(successAction)));
 }
 
 - (void)notifyTarget:(id)target didCancelWithAction:(SEL)cancelAction origin:(id)origin {
